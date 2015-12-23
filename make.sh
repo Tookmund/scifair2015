@@ -11,4 +11,4 @@ if [ ! -e hda.img ]
 then 
 	qemu-img create -f qcow2 hda.img 5G
 fi
-qemu-system-i386 -cdrom debian.iso -hda hda.img -m 512
+qemu-system-i386 -cdrom debian.iso -hda hda.img -m 512 -net nic -net user
