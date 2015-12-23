@@ -5,7 +5,7 @@ then
 	wget http://get.debian.org/cdimage/archive/7.9.0-live/i386/iso-hybrid/debian-live-7.9.0-i386-standard.iso -O debian.iso
 fi
 
-sha512sum -c SHA512SUMS
+sha512sum -c SHA512SUMS || exit 0
 
 if [ ! -e hda.img ]
 then 
