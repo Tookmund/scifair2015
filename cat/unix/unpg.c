@@ -2,7 +2,7 @@
  * Copyright (c) 2015 Jacob Adams
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
+ * copyof this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
@@ -21,35 +21,24 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
 #include <sys/types.h>
-#include <dirent.h>
+#include <unistd.h>
 
 #define MAXBUF 1000
 
-void lsdir(char* path) {
-	char pf[MAXBUF];
-	DIR* dir = opendir(path);
-	if (dir == NULL) {
-		snprintf(pf,MAXBUF,"Open %s",path);
-		perror(pf);
-		return;
+int main (int argc, char* argv[]) {
+	char buf[MAXBUF];
+	int rd = 1;
+	int wr = 1;
+	while (rd > 0 && wr > 0) {
+		rd = read(STDIN_FILENO,buf,MAXBUF);
+		if (rd < 0) perror(argv[0]);
+		wr = write(STDOUT_FILENO,buf,MAXBUF);
+		if (wr < 0) perror(argv[0]);
 	}
-	struct dirent* ent = readdir(dir);
-	while (ent != NULL) {
-		printf("%s\n",ent->d_name);
-		ent = readdir(dir);
-	}
+	/* Output a newline at the end to make it more readable */
+	write(STDOUT_FILENO,"\n",1);
+	return 0;
 }
-
-int main (int argc, char *argv[]) {
-	if (argc == 1) {
-		lsdir(".");
-	}
-	else {
-		int i;
-		for (i = 0; i < argc; i++) {
-			lsdir(argv[i]);
-		}
-	}
-}
-
