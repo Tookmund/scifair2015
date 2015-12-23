@@ -66,7 +66,7 @@ int main (int argc, char** argv) {
 		wr = write(STDOUT_FILENO,buf,st->st_size);
 		if (wr < 0) {
 			snprintf(pf,MAXBUF,"Write %s",argv[i]);
-			perror(argv[i]);
+			perror(pf);
 			continue;
 		}
 	}
