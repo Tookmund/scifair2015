@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#define MAXBUF 1000
 int main (int argc, char** argv) {
 	int i;
 	struct stat statbuf;
@@ -14,36 +15,37 @@ int main (int argc, char** argv) {
 	int fd;
 	int rd;
 	int wr;
+	char pf[MAXBUF];
 	for (i = 1; i < argc; i++) {
 		ret = stat(argv[i],st);
 		if (ret < 0) {
-			printf("Stat ");
-			perror(argv[i]);
-			printf("\n");
-			return 1;
+			snprintf(pf,MAXBUF,"Stat %s", argv[i]);
+			perror(pf);
+			continue;
 		}
 		buf = (char*)malloc(st->st_size);
 		if (buf == NULL) {
-			printf("Malloc %ld",st->st_size);
-			perror(argv[i]);
-			return 1;
+			snprintf(pf,MAXBUF,"Malloc %s %ld",argv[i],st->st_size);
+			perror(pf);
+			continue;
 		}
 		fd = open(argv[i],O_RDONLY);
 		if (fd < 0) {
-			printf("Open ");
-			perror(argv[i]);
+			snprintf(pf,MAXBUF,"Open %s",argv[i]);
+			perror(pf);
+			continue;
 		}
 		rd = read(fd,buf,st->st_size);
 		if (rd < 0) {
-			printf("Read ");
-			perror(argv[i]);
-			return 1;
+			snprintf(pf,MAXBUF,"Read %s",argv[i]);
+			perror(pf);
+			continue;
 		}
 		wr = write(STDOUT_FILENO,buf,st->st_size);
 		if (wr < 0) {
-			printf("Write ");
+			snprintf(pf,MAXBUF,"Write %s",argv[i]);
 			perror(argv[i]);
-			return 1;
+			continue;
 		}
 	}
 	return 0;
